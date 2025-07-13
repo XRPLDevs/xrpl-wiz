@@ -1,0 +1,15 @@
+{
+  "name": "@xrpl-wiz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "frontend:dev": "pnpm --filter @xrpl-wiz/frontend dev",
+    "frontend:format": "pnpm --filter @xrpl-wiz/frontend format",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.1"
+}
