@@ -1,10 +1,12 @@
 'use client'
 
+import { isInstalled, getAddress } from '@gemwallet/api'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
+import { useWalletStore } from '@/stores'
 
 type WalletConnectButtonProps = {
   open: boolean
@@ -15,11 +17,27 @@ export default function WalletConnectButton({
   open,
   setOpen
 }: WalletConnectButtonProps) {
+  const { connect } = useWalletStore()
+
   const handleConnectGemWallet = async () => {
     try {
-      console.log('connect gem wallet')
+      if (!(await isInstalled())) {
+        throw new Error('Gem wallet is not installed')
+      }
+
+      const response = await getAddress()
+
+      if (response.type === 'reject' || !response.result) {
+        throw new Error('User rejected the request')
+      }
+
+      const address = response.result.address
+
+      connect(address)
     } catch (error) {
       console.error(error)
+    } finally {
+      setOpen(false)
     }
   }
 
