@@ -4,20 +4,24 @@ import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import AppBar from '@mui/material/AppBar'
+import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import InboxIcon from '@mui/icons-material/Inbox'
-import StarBorder from '@mui/icons-material/StarBorder'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import LogoutIcon from '@mui/icons-material/Logout'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import WalletConnectButton from '@/components/ui/WalletConnectButton/WalletConnectButton'
+import { useWalletStore } from '@/stores'
 
 const Box = dynamic(
   () => import('@mui/material/Box').then((mod) => mod.default),
@@ -31,10 +35,27 @@ const drawerWidth = 240
 export default function Header() {
   const [open, setOpen] = useState(false)
 
+  const [openDrawer, setOpenDrawer] = useState(false)
+
   const [openDocumentMenu, setOpenDocumentMenu] = useState(true)
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const menuOpen = Boolean(anchorEl)
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const { isConnected, address, disconnect } = useWalletStore()
 
   const handleClick = () => {
     setOpenDocumentMenu(!openDocumentMenu)
+  }
+
+  const handleLogout = () => {
+    disconnect()
+    setAnchorEl(null)
+    setOpenDrawer(false)
   }
 
   return (
@@ -45,25 +66,55 @@ export default function Header() {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
+          <IconButton
+            color="inherit"
+            sx={{ mr: 2 }}
+            onClick={() => setOpenDrawer(!openDrawer)}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             XRPL Wiz
           </Typography>
-          <WalletConnectButton open={open} setOpen={setOpen} />
+          {!isConnected && (
+            <WalletConnectButton open={open} setOpen={setOpen} />
+          )}
+          {isConnected && (
+            <>
+              <Button
+                variant="outlined"
+                color="inherit"
+                sx={{ textTransform: 'none' }}
+                onClick={handleOpenMenu}
+              >
+                {address.slice(0, 6)}...{address.slice(-4)}
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={menuOpen}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+              >
+                <MenuItem onClick={handleLogout} disableRipple>
+                  <LogoutIcon sx={{ mr: 1 }} />
+                  Sign Out
+                </MenuItem>
+              </Menu>
+            </>
+          )}
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
-            width: drawerWidth,
-            boxSizing: 'border-box'
-          }
-        }}
-      >
+
+      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
+        <Box sx={{ width: drawerWidth }}>
           <List>
             <ListItem disablePadding>
               <ListItemButton component={Link} href="/">
