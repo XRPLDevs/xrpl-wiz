@@ -31,7 +31,7 @@ const drawerWidth = 240
 export default function Header() {
   const [open, setOpen] = useState(false)
 
-  const [openDocumentMenu, setOpenDocumentMenu] = useState(false)
+  const [openDocumentMenu, setOpenDocumentMenu] = useState(true)
 
   const handleClick = () => {
     setOpenDocumentMenu(!openDocumentMenu)
@@ -89,6 +89,13 @@ export default function Header() {
                   href="/documents/dev-tools"
                 >
                   <ListItemText primary="Dev Tools" />
+                </ListItemButton>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  href="/documents/services"
+                >
+                  <ListItemText primary="Services" />
                 </ListItemButton>
               </List>
             </Collapse>
