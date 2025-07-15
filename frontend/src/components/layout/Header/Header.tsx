@@ -121,6 +121,11 @@ export default function Header() {
                 <ListItemText primary="Dashboard" />
               </ListItemButton>
             </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/token/create">
+                <ListItemText primary="Token Creation" />
+              </ListItemButton>
+            </ListItem>
             <ListItemButton onClick={handleClick}>
               <ListItemText primary="Documents" />
               {openDocumentMenu ? <ExpandLess /> : <ExpandMore />}
