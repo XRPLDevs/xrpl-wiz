@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
 import { Header } from '@/components/layout'
+import QueryClientProvider from '@/providers/QueryClientProvider'
 import ThemeProvider from '@/providers/ThemeProvider'
 import './globals.css'
 
@@ -25,10 +26,12 @@ export default function RootLayout({
         className={`${notoSans.variable} antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider>
-          <Header />
-          {children}
-        </ThemeProvider>
+        <QueryClientProvider>
+          <ThemeProvider>
+            <Header />
+            {children}
+          </ThemeProvider>
+        </QueryClientProvider>
       </body>
     </html>
   )
