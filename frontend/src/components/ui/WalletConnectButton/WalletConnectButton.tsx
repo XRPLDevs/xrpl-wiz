@@ -7,7 +7,6 @@ import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import { useWalletStore } from '@/stores'
-import { fetchAllBalances } from '@/utils/xrpl'
 
 type WalletConnectButtonProps = {
   open: boolean
@@ -18,7 +17,7 @@ export default function WalletConnectButton({
   open,
   setOpen
 }: WalletConnectButtonProps) {
-  const { connect, setBalances } = useWalletStore()
+  const { connect } = useWalletStore()
 
   const handleConnectGemWallet = async () => {
     try {
@@ -35,10 +34,6 @@ export default function WalletConnectButton({
       const address = response.result.address
 
       connect(address)
-
-      const balances = await fetchAllBalances(address)
-
-      setBalances(balances)
     } catch (error) {
       console.error(error)
     } finally {

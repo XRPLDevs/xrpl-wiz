@@ -15,9 +15,11 @@
     "@gemwallet/api": "^3.8.0",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
+    "@tanstack/react-query": "^5.83.0",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "uuid": "^11.1.0",
     "xrpl": "^4.3.0",
     "zustand": "^5.0.6"
   },
