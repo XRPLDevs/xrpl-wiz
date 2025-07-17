@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useWalletStore } from '@/stores'
 
 export function useWalletBalance(address?: string) {
-  const { address: storeAddress } = useWalletStore()
+  const { address: storeAddress, isConnected } = useWalletStore()
   const targetAddress = address ?? storeAddress
 
   const { data, isLoading, isSuccess, error, refetch } = useQuery({
@@ -16,7 +16,7 @@ export function useWalletBalance(address?: string) {
       const json = await response.json()
       return json.lines
     },
-    enabled: false
+    enabled: isConnected
   })
 
   return {
