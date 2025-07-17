@@ -31,6 +31,9 @@ export default function WalletBalanceTable() {
         <TableHead>
           <TableRow>
             <TableCell>Currency</TableCell>
+            <TableCell>No Ripple</TableCell>
+            <TableCell>Quality In</TableCell>
+            <TableCell>Quality Out</TableCell>
             <TableCell>Limit</TableCell>
             <TableCell>Balance</TableCell>
           </TableRow>
@@ -54,19 +57,18 @@ export default function WalletBalanceTable() {
             balances.map((row) => (
               <TableRow key={row.id}>
                 <TableCell component="th" scope="row">
-                  <Typography variant="body1" component="div">
+                  <Typography variant="body1" component="div" sx={{ fontWeight: 'bold' }}>
                     {row.currency}
                   </Typography>
                   <Typography variant="caption" component="div">
-                    {truncate(row.account, 6)}
+                    {truncate(row.account, 10)}
                   </Typography>
                 </TableCell>
-                <TableCell>
-                  {row.limit ?? '-'} {row.currency}
-                </TableCell>
-                <TableCell>
-                  {row.balance} {row.currency}
-                </TableCell>
+                <TableCell>{row.noRipple ? 'Yes' : 'No'}</TableCell>
+                <TableCell>{row.qualityIn ?? '-'}</TableCell>
+                <TableCell>{row.qualityOut ?? '-'}</TableCell>
+                <TableCell>{row.limit ?? '-'} {row.currency}</TableCell>
+                <TableCell>{row.balance} {row.currency}</TableCell>
               </TableRow>
             ))}
         </TableBody>

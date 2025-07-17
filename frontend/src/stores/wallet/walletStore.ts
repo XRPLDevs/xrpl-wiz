@@ -16,6 +16,8 @@ export type TokenBalance = {
   limitPeer: string
   qualityIn: number
   qualityOut: number
+  noRipple: boolean
+  noRipplePeer: boolean
 }
 
 export type WalletActions = {

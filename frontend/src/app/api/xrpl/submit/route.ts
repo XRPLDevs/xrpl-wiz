@@ -5,9 +5,10 @@ const XRPL_API_URL = 'https://s.altnet.rippletest.net:51234/'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const address = searchParams.get('address')
+  const txBlob = searchParams.get('txBlob')
 
-  if (!address) {
+  console.log('txBlob: ', txBlob)
+  if (!txBlob) {
     return NextResponse.json({ error: 'Address is required' }, { status: 400 })
   }
 
@@ -17,10 +18,10 @@ export async function GET(request: Request) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      method: 'account_lines',
+      method: 'submit',
       params: [
         {
-          account: address
+          tx_blob: txBlob
         }
       ]
     })
@@ -29,18 +30,9 @@ export async function GET(request: Request) {
   const json = await response.json()
   const result = json.result
 
+  console.log('result: ', result)
+
   return NextResponse.json({
-    lines: result.lines.map((line: any) => ({
-      id: uuidv4(),
-      currency: line.currency,
-      account: line.account,
-      balance: line.balance,
-      limit: line.limit,
-      limitPeer: line.limit_peer,
-      qualityIn: line.quality_in,
-      qualityOut: line.quality_out,
-      noRipple: line.no_ripple ?? false,
-      noRipplePeer: line.no_ripple_peer ?? false
-    }))
+    result
   })
 }

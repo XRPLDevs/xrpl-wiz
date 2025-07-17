@@ -1,29 +1,29 @@
 import { useQuery } from '@tanstack/react-query'
 import { useWalletStore } from '@/stores'
 
-export function useWalletBalance() {
-  const { isConnected, address } = useWalletStore()
+export function useWalletBalance(address?: string) {
+  const { address: storeAddress, isConnected } = useWalletStore()
+  const targetAddress = address ?? storeAddress
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['wallet-balance'],
+  const { data, isLoading, isSuccess, error, refetch } = useQuery({
+    queryKey: ['wallet-balance', targetAddress],
     queryFn: async () => {
-      const response = await fetch(`/api/xrpl/balances?address=${address}`)
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch wallet balances')
-      }
-
+      if (!targetAddress) throw new Error('No address')
+      const response = await fetch(
+        `/api/xrpl/balances?address=${targetAddress}`
+      )
+      if (!response.ok) throw new Error('Failed to fetch wallet balances')
       const json = await response.json()
-      const lines = json.lines
-
-      return lines
+      return json.lines
     },
-    enabled: isConnected && !!address
+    enabled: isConnected
   })
 
   return {
     data,
     isLoading,
-    error
+    isSuccess,
+    error,
+    refetch
   }
 }

@@ -22,6 +22,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import WalletConnectButton from '@/components/ui/WalletConnectButton/WalletConnectButton'
 import { useWalletStore } from '@/stores'
+import { truncate } from '@/utils/string'
 
 const Box = dynamic(
   () => import('@mui/material/Box').then((mod) => mod.default),
@@ -36,6 +37,8 @@ export default function Header() {
   const [open, setOpen] = useState(false)
 
   const [openDrawer, setOpenDrawer] = useState(false)
+
+  const [openTransactionMenu, setOpenTransactionMenu] = useState(false)
 
   const [openDocumentMenu, setOpenDocumentMenu] = useState(true)
 
@@ -87,7 +90,7 @@ export default function Header() {
                 sx={{ textTransform: 'none' }}
                 onClick={handleOpenMenu}
               >
-                {address.slice(0, 6)}...{address.slice(-4)}
+                {truncate(address, 6)}
               </Button>
               <Menu
                 anchorEl={anchorEl}
@@ -119,6 +122,28 @@ export default function Header() {
             <ListItem disablePadding>
               <ListItemButton component={Link} href="/">
                 <ListItemText primary="Dashboard" />
+              </ListItemButton>
+            </ListItem>
+            <ListItemButton
+              onClick={() => setOpenTransactionMenu(!openTransactionMenu)}
+            >
+              <ListItemText primary="Transactions" />
+              {openTransactionMenu ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openDocumentMenu} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  href="/transactions/trust-set"
+                >
+                  <ListItemText primary="Trust Set" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/token/create">
+                <ListItemText primary="Token Creation" />
               </ListItemButton>
             </ListItem>
             <ListItemButton onClick={handleClick}>
